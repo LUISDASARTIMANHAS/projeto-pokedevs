@@ -1,34 +1,33 @@
-function getPokedevsData() {
-  const url = "./src/data/pokedevs.json";
-  const options = {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "content-type": "application/json;charset=utf-8",
-    },
-  };
+const listaSelecaoPokedevs = document.querySelectorAll(".pokedev");
 
-  fetch(url, options)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        return response.text().then((errorText) => {
-          throw new Error("Erro ao obter banco de dados: " + errorText);
-        });
-      }
-    })
-    .then((data) => {
-      renderPokedevs(data);
-    })
-    .catch((error) => onErrorHostname(error));
+listaSelecaoPokedevs.forEach(function (pokedev) {
+  pokedev.addEventListener("click",()=>{
+    esconderCartaoPokedev();
+    const idPokedevSelecionado = mostrarCartaoPokedevSelecionado(pokedev);
+    desativarPokedevSelecionadoNaListagem();
+    ativarPokedevSelecionadoNaListagem(idPokedevSelecionado);
+  });
+})
 
-  function onError(error) {
-    console.debug(error);
-  }
+function ativarPokedevSelecionadoNaListagem(idPokedevSelecionado) {
+  const pokedevSelecionadoNaListagem = document.getElementById(idPokedevSelecionado);
+  pokedevSelecionadoNaListagem.classList.add("ativo");
 }
-getPokedevsData();
 
-function renderPokedevs(database) {
-  console.log(database);
+function desativarPokedevSelecionadoNaListagem() {
+  const pokedevAtivoNaListagem = document.querySelector(".ativo");
+  pokedevAtivoNaListagem.classList.remove("ativo");
+}
+
+function mostrarCartaoPokedevSelecionado(pokedev) {
+  const idPokedevSelecionado = pokedev.attributes.id.value;
+  const idDoCartaoPokedevParaAbrir = `cartao-${idPokedevSelecionado}`;
+  const cartaoPokedevParaAbrir = document.getElementById(idDoCartaoPokedevParaAbrir);
+  cartaoPokedevParaAbrir.classList.add("aberto");
+  return idPokedevSelecionado;
+}
+
+function esconderCartaoPokedev() {
+  const cartaoPokedevAberto = document.querySelector(".aberto");
+  cartaoPokedevAberto.classList.remove("aberto");
 }
